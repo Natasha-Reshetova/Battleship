@@ -1,0 +1,23 @@
+.container {
+	display: flex;
+	margin: 0 auto;
+	vertical-align: middle;
+	text-align: center;
+	align-items: center;
+}
+
+.sea {
+	display: inline-flex;
+	width: 50px;
+	height: 50px;
+	background-color: #b0c4de;
+	border: 3px solid black;
+}
+
+.ship {
+	display: inline-flex;
+	width: 50px;
+	height: 50px;
+	background-color: #4c3c18;
+	border: 3px solid black;
+}
