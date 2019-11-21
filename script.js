@@ -1,280 +1,112 @@
 class Field {
     constructor() {
-      var startNumber = 0;
-      this.massiv = [];
-      for (let i = 0; i < 10; i++) {
-        this.container = document.createElement("div");
-        this.container.className = "container";
-        document.body.appendChild(this.container);
-  
-        for (let n = 0; n < 10; n++) {
-          this.cell = document.createElement("div");
-          this.cell.className = "sea";
-          this.cell.number = startNumber++;
-          this.cell.positionX = n;
-          this.cell.positionY = i;
-          this.cell.isShip = false;
-          this.massiv.push(this.cell);
-          this.container.appendChild(this.cell);
+        this.arrShips = [4, 3, 3];
+        this.matrix = [];
+        for (let i = 0; i < 12; i++) {
+            this.matrix.push([]);
+            for (let n = 0; n < 12; n++) {
+                this.cell = false;
+                this.matrix[i].push(this.cell);
+            }
         }
-      }
+        this.firstCoordinate = [];
     }
-  
+
     init() {
-      this.makeShip4();
-      this.makeShip3();
-      this.makeShip3();
-      this.makeShip2();
-      this.makeShip2();
-      this.makeShip2();
-      this.makeShip1();
-      this.makeShip1();
-      this.makeShip1();
-      this.makeShip1();
-    }
-  
-    makeRandomNumberFirstCell() {
-      let firstCellShipNumber = Math.floor(Math.random() * 100);
-      if (this.massiv[firstCellShipNumber].className === "ship") {
-        this.makeRandomNumberFirstCell();
-        return firstCellShipNumber;
-      } else {
-        return firstCellShipNumber;
+      while (this.arrShips.length > 0) {
+            this.makeShip();
       }
+      this.render(); 
+    }
+   
+    makeRandomNumberFirstCell() {
+      this.firstCoordinate = [];
+      let firstcellShipX = Math.floor(1 + Math.random() * 10);
+      let firstcellShipY = Math.floor(1 + Math.random() * 10);
+
+      if (this.matrix[firstcellShipY][firstcellShipX] === true) {
+        this.makeRandomNumberFirstCell();
+        return;
+      }  
+      this.firstCoordinate.push(firstcellShipX, firstcellShipY);   
     }
   
     chooseDirectionNumber() {
-      return Math.floor(Math.random() * 4);
+      return Math.floor(Math.random() * 2);
     }
   
-    drowShip(firstcellShip) {
-      for (var i = 0; i < this.massiv.length; i++) {
-        if (this.massiv[i].number == firstcellShip) {
-          this.massiv[i].className = "ship";
-          this.massiv[i].isShip = true;
-          return;
-        }
-      }
+    drowShip(firstcellShipX, firstcellShipY) {
+      // for (let i = 1; i < 12; i++) {
+      //   for (let n = 1; n < 12; n++) {
+        let n = firstcellShipX;
+        let i = firstcellShipY;
+          for (let a=i-1; a<i+1; a++) {
+            for (let b= n-1; b<n+1; b++) {
+              if (this.matrix[a][b] === true) {
+                this.makeShip();
+                return;
+              }
+            }
+          }
+             // this.matrix[i][n] = true;
+              
+            
+          
+      //   }
+      // }
     }
   
-    makeShip4() {
-      var firstcellShip = this.makeRandomNumberFirstCell();
-      var direction = this.chooseDirectionNumber();
-      if (direction === 0) {
-        if (this.massiv[firstcellShip].positionY < 3) {
-          this.makeShip4();
-          return;
-        }
-      }
-      if (direction === 1) {
-        if (this.massiv[firstcellShip].positionX > 6) {
-          this.makeShip4();
-          return;
-        }
-      }
-      if (direction === 2) {
-        if (this.massiv[firstcellShip].positionY > 6) {
-          this.makeShip4();
-          return;
-        }
-      }
-      if (direction === 3) {
-        if (this.massiv[firstcellShip].positionX < 3) {
-          this.makeShip4();
-          return;
-        }
-      }
-      for (let i = 0; i < 4; i++) {
-        this.drowShip(firstcellShip);
+    makeShip() {
+        this.makeRandomNumberFirstCell();
+        let firstcellShipX = this.firstCoordinate[0];
+        let firstcellShipY = this.firstCoordinate[1];
+        var direction = this.chooseDirectionNumber();
+
         if (direction === 0) {
-          firstcellShip = firstcellShip - 10;
+            if (firstcellShipX + this.arrShips[0] > 11) {
+            this.makeShip();
+            return;
+          }
         }
         if (direction === 1) {
-          firstcellShip = firstcellShip + 1;
+          if (firstcellShipY + this.arrShips[0] > 11) {
+            this.makeShip();
+            return;
+          }
         }
-        if (direction === 2) {
-          firstcellShip = firstcellShip + 10;
+        for (let i = 0; i < this.arrShips[0]; i++) {
+          this.drowShip(firstcellShipX, firstcellShipY);
+          if (direction === 0) {
+            firstcellShipX = firstcellShipX + 1;
+          }
+          if (direction === 1) {
+            firstcellShipY = firstcellShipY + 1;
+          }
         }
-        if (direction === 3) {
-          firstcellShip = firstcellShip - 1;
+        this.arrShips.shift();
+    }
+
+    render() {
+      for (let i = 1; i < 11; i++) {
+        var smallContainer = document.createElement("div");
+          smallContainer.className = "small-container";
+          document.querySelector(".container").appendChild(smallContainer);
+        for (let n = 1; n < 11; n++) {
+          if (this.matrix[i][n] === true) {
+            this.matrix[i][n] = document.createElement("div");
+            this.matrix[i][n].className = "ship";
+            document.querySelector(".small-container").appendChild(this.matrix[i][n]);
+          }
+          else {
+            this.matrix[i][n] = document.createElement("div");
+            this.matrix[i][n].className = "sea";
+            document.querySelector(".small-container").appendChild(this.matrix[i][n]);
+          }
         }
       }
     }
-  
-    makeShip3() {
-      var firstcellShip = this.makeRandomNumberFirstCell();
-      var direction = this.chooseDirectionNumber();
-      if (direction === 0) {
-        if (this.massiv[firstcellShip].positionY < 2) {
-          this.makeShip3();
-          return;
-        }
-        if (this.massiv[firstcellShip].className === "ship" ||
-          this.massiv[firstcellShip - 10].className === "ship" ||
-          this.massiv[firstcellShip - 20].className === "ship") {
-          this.makeShip3();
-          return;
-        }
-      }
-      if (direction === 1) {
-        if (this.massiv[firstcellShip].positionX > 7) {
-          this.makeShip3();
-          return;
-        }
-        if (this.massiv[firstcellShip].className === "ship" ||
-          this.massiv[firstcellShip + 1].className === "ship" ||
-          this.massiv[firstcellShip + 2].className === "ship") {
-          this.makeShip3();
-          return;
-        }
-      }
-      if (direction === 2) {
-        if (this.massiv[firstcellShip].positionY > 7) {
-          this.makeShip3();
-          return;
-        }
-        if (this.massiv[firstcellShip].className === "ship" ||
-          this.massiv[firstcellShip + 10].className === "ship" ||
-          this.massiv[firstcellShip + 20].className === "ship") {
-          this.makeShip3();
-          return;
-        }
-      }
-      if (direction === 3) {
-        if (this.massiv[firstcellShip].positionX < 2) {
-          this.makeShip3();
-          return;
-        }
-        if (this.massiv[firstcellShip].className === "ship" ||
-          this.massiv[firstcellShip - 1].className === "ship" ||
-          this.massiv[firstcellShip - 2].className === "ship") {
-          this.makeShip3();
-          return;
-        }
-      }
-      for (let i = 0; i < 3; i++) {
-        this.drowShip(firstcellShip);
-        if (direction === 0) {
-          firstcellShip = firstcellShip - 10;
-        }
-        if (direction === 1) {
-          firstcellShip = firstcellShip + 1;
-        }
-        if (direction === 2) {
-          firstcellShip = firstcellShip + 10;
-        }
-        if (direction === 3) {
-          firstcellShip = firstcellShip - 1;
-        }
-      }
-    }
-  
-    makeShip2() {
-      var firstcellShip = this.makeRandomNumberFirstCell();
-      var direction = this.chooseDirectionNumber();
-      if (direction === 0) {
-        if (this.massiv[firstcellShip].positionY < 1) {
-          this.makeShip2();
-          return;
-        }
-        if (this.massiv[firstcellShip].className === "ship" ||
-          this.massiv[firstcellShip - 10].className === "ship") {
-          this.makeShip2();
-          return;
-        }
-      }
-      if (direction === 1) {
-        if (this.massiv[firstcellShip].positionX > 8) {
-          this.makeShip2();
-          return;
-        }
-        if (this.massiv[firstcellShip].className === "ship" ||
-          this.massiv[firstcellShip + 1].className === "ship") {
-          this.makeShip2();
-          return;
-        }
-      }
-      if (direction === 2) {
-        if (this.massiv[firstcellShip].positionY > 8) {
-          this.makeShip2();
-          return;
-        }
-        if (this.massiv[firstcellShip].className === "ship" ||
-          this.massiv[firstcellShip + 10].className === "ship") {
-          this.makeShip2();
-          return;
-        }
-      }
-      if (direction === 3) {
-        if (this.massiv[firstcellShip].positionX < 1) {
-          this.makeShip2();
-          return;
-        }
-        if (this.massiv[firstcellShip].className === "ship" ||
-          this.massiv[firstcellShip - 1].className === "ship") {
-          this.makeShip2();
-          return;
-        }
-      }
-      for (let i = 0; i < 2; i++) {
-        this.drowShip(firstcellShip);
-        if (direction === 0) {
-          firstcellShip = firstcellShip - 10;
-        }
-        if (direction === 1) {
-          firstcellShip = firstcellShip + 1;
-        }
-        if (direction === 2) {
-          firstcellShip = firstcellShip + 10;
-        }
-        if (direction === 3) {
-          firstcellShip = firstcellShip - 1;
-        }
-      }
-    }
-  
-    makeShip1() {
-      var firstcellShip = this.makeRandomNumberFirstCell();
-      var direction = this.chooseDirectionNumber();
-      if (direction === 0) {
-        if (this.massiv[firstcellShip].className === "ship") {
-          this.makeShip1();
-          return;
-        }
-      }
-      if (direction === 1) {
-        if (this.massiv[firstcellShip].className === "ship") {
-          this.makeShip1();
-          return;
-        }
-      }
-      if (direction === 2) {
-        if (this.massiv[firstcellShip].className === "ship") {
-          this.makeShip1();
-          return;
-        }
-      }
-      if (direction === 3) {
-        if (this.massiv[firstcellShip].className === "ship") {
-          this.makeShip1();
-          return;
-        }
-      }
-      this.drowShip(firstcellShip);
-      if (direction === 0) {
-        firstcellShip = firstcellShip - 10;
-      }
-      if (direction === 1) {
-        firstcellShip = firstcellShip + 1;
-      }
-      if (direction === 2) {
-        firstcellShip = firstcellShip + 10;
-      }
-      if (direction === 3) {
-        firstcellShip = firstcellShip - 1;
-      }
-    }
-  }
-  
+
+
+}
   new Field().init()
   
