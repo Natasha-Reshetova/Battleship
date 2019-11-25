@@ -9,12 +9,11 @@ class Field {
           isShip: false,
           isHit: false,
           isKilled: false,
-          shipCells: []
         };
         this.battleshipGrid[i].push(cell);
       }
     }
-    this.arrForChecking = [];
+    this.shipCells = [];
     this.successfulPoints = 0;
     this.allPoints = 0;
   }
@@ -87,7 +86,7 @@ class Field {
 
   putShip(orientation, firstcellShipX, firstcellShipY) {
     let shipCells = [];
-    this.arrForChecking.push(shipCells);
+    this.shipCells.push(shipCells);
 
     for (let k = 0; k < this.arrShips[0]; k++) {
       for (let i = 1; i < 12; i++) {
@@ -147,7 +146,14 @@ class Field {
       var allPoints = document.createElement("div");
       allPoints.innerHTML = "Общее количество выстрелов: " + this.allPoints;
       allPoints.className = "all-points";
-      info.appendChild(allPoints)
+      info.appendChild(allPoints);
+
+      var newGame = document.createElement("input");
+      newGame.setAttribute("type", "button");
+      newGame.setAttribute("value", "Новая игра");
+      newGame.className = "new-game";
+      newGame.addEventListener("click", () => this.startingNewGame());
+      info.appendChild(newGame)
     }
 
     for (let i = 1; i < 11; i++) {
@@ -205,6 +211,9 @@ class Field {
 
   shoot(x, y) {
     this.battleshipGrid[x][y].isHit = true;
+    if (this.successfulPoints === 20) {
+      return;
+    }
     this.allPoints = this.allPoints + 1;
     if (!this.battleshipGrid[x][y].isShip) {
       this.render();
@@ -232,13 +241,19 @@ class Field {
   }
 
   getShipCells(x, y) {
-    for (let b=0; b<this.arrForChecking.length; b++) {
-        for (let a=0; a<this.arrForChecking[b].length; a++) {
-          if (this.arrForChecking[b][a][0] === x && this.arrForChecking[b][a][1] === y) {
-            return this.arrForChecking[b];
+    for (let b=0; b<this.shipCells.length; b++) {
+        for (let a=0; a<this.shipCells[b].length; a++) {
+          if (this.shipCells[b][a][0] === x && this.shipCells[b][a][1] === y) {
+            return this.shipCells[b];
             }
         } 
       }
     }
+
+  startingNewGame() {
+    document.querySelector(".block").remove();
+    document.querySelector(".game-name").remove();
+    new Field().init()
+  }
 }
 new Field().init()
