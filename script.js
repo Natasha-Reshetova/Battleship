@@ -12,7 +12,6 @@ class Field {
           shipCells: []
         };
         this.battleshipGrid[i].push(cell);
-        this.arr = [];
       }
     }
     this.arrForChecking = [];
@@ -37,7 +36,6 @@ class Field {
 
   canPutShip(firstcellShipX, firstcellShipY, orientation) {
     let isAllowedDrow = true;
-    this.arr = [];
     for (let k = 0; k < this.arrShips[0]; k++) {
       let n = firstcellShipX;
       let i = firstcellShipY;
@@ -48,7 +46,6 @@ class Field {
           }
         }
       }
-      this.arr.push([[firstcellShipX, firstcellShipY], false]);
       if (orientation === 0) {
         firstcellShipX = firstcellShipX + 1;
       }
@@ -56,13 +53,6 @@ class Field {
         firstcellShipY = firstcellShipY + 1;
       }
     }
-    // if (isAllowedDrow) {
-    //   this.putShip(orientation, this.arr);
-    //   this.arr = [];
-    // } else {
-    //   this.arr = [];
-    //   this.generateShip();
-    // }
     return isAllowedDrow;
   }
 
@@ -84,25 +74,20 @@ class Field {
         return;
       }
     }
+
     let isAllowedDrow = this.canPutShip(firstcellShipX, firstcellShipY, orientation);
       if (isAllowedDrow) {
         this.putShip(orientation, firstcellShipX, firstcellShipY);
-        this.arr = [];
       } else {
-        this.arr = [];
         this.generateShip();
       }
   }
 
   putShip(orientation, firstcellShipX, firstcellShipY) {
-    if (this.arr.length !== 0) {
-      this.arrForChecking.push(this.arr);
-      this.arr = [];
-    }
-    // let firstcellShipX = this.firstCoordinate[0];
-    // let firstcellShipY = this.firstCoordinate[1];
-    for (let k = 0; k < this.arrShips[0]; k++) {
+    let shipCells = [];
+    this.arrForChecking.push(shipCells);
 
+    for (let k = 0; k < this.arrShips[0]; k++) {
       for (let i = 1; i < 12; i++) {
         for (let n = 1; n < 12; n++) {
           if (firstcellShipX === i) {
@@ -118,11 +103,13 @@ class Field {
       if (orientation === 1) {
         firstcellShipY = firstcellShipY + 1;
       }
+      shipCells.push([firstcellShipX, firstcellShipY]);
     }
     this.arrShips.shift();
   }
 
   render() {
+    console.log(this.arrForChecking)
     if (document.querySelector(".container")) {
         document.querySelector(".container").remove();
     }
