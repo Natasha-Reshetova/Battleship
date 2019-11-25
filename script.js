@@ -15,6 +15,8 @@ class Field {
       }
     }
     this.arrForChecking = [];
+    this.successfulPoints = 0;
+    this.allPoints = 0;
   }
 
   init() {
@@ -109,6 +111,7 @@ class Field {
   }
 
   render() {
+    
     if (document.querySelector(".container")) {
         document.querySelector(".container").remove();
     }
@@ -116,6 +119,16 @@ class Field {
     var container = document.createElement("div");
     container.className = "container";
     document.body.appendChild(container);
+
+    if (this.successfulPoints === 20) {
+      var successfulPoints = document.createElement("div");
+      successfulPoints.innerHTML = "Количество попаданий: " + this.successfulPoints;
+      document.body.appendChild(successfulPoints);
+
+      var allPoints = document.createElement("div");
+      allPoints.innerHTML = "Общее количество выстрелов: " + this.allPoints;
+      document.body.appendChild(allPoints)
+    }
 
     for (let i = 1; i < 11; i++) {
       var smallContainer = document.createElement("div");
@@ -172,10 +185,12 @@ class Field {
 
   shoot(x, y) {
     this.battleshipGrid[x][y].isHit = true;
+    this.allPoints = this.allPoints + 1;
     if (!this.battleshipGrid[x][y].isShip) {
       this.render();
       return;
     }
+    this.successfulPoints = this.successfulPoints + 1;
     let shipCells = this.getShipCells(x, y);
     for (let shipCell of shipCells) {
       if(!this.battleshipGrid[shipCell[0]][shipCell[1]].isHit) {
@@ -189,7 +204,6 @@ class Field {
         for (let b = shipCell[1] - 1; b < shipCell[1] + 2; b++) {
           if (!this.battleshipGrid[a][b].isShip) {
             this.battleshipGrid[a][b].isHit = true;
-            console.log(a, b)
           }
         }
       }
