@@ -111,23 +111,43 @@ class Field {
   }
 
   render() {
-    
-    if (document.querySelector(".container")) {
-        document.querySelector(".container").remove();
+    if (document.querySelector(".block")) {
+        document.querySelector(".block").remove();
+        document.querySelector(".game-name").remove();
     }
+
+    var gameName = document.createElement("h1");
+    gameName.innerHTML = "Морской бой";
+    gameName.className = "game-name";
+    document.body.appendChild(gameName);
+
+    var block = document.createElement("div");
+    block.className = "block";
+    document.body.appendChild(block);
 
     var container = document.createElement("div");
     container.className = "container";
-    document.body.appendChild(container);
+    block.appendChild(container);
 
     if (this.successfulPoints === 20) {
+      var info = document.createElement("div");
+      info.className = "info";
+      block.appendChild(info);
+
+      var gameOver = document.createElement("div");
+      gameOver.innerHTML = "Игра окончена!";
+      gameOver.className = "game-over";
+      info.appendChild(gameOver);
+
       var successfulPoints = document.createElement("div");
       successfulPoints.innerHTML = "Количество попаданий: " + this.successfulPoints;
-      document.body.appendChild(successfulPoints);
+      successfulPoints.className = "successful-points";
+      info.appendChild(successfulPoints);
 
       var allPoints = document.createElement("div");
       allPoints.innerHTML = "Общее количество выстрелов: " + this.allPoints;
-      document.body.appendChild(allPoints)
+      allPoints.className = "all-points";
+      info.appendChild(allPoints)
     }
 
     for (let i = 1; i < 11; i++) {
