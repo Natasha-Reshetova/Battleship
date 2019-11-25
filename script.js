@@ -97,19 +97,18 @@ class Field {
           }
         }
       }
+      shipCells.push([firstcellShipX, firstcellShipY]);
       if (orientation === 0) {
         firstcellShipX = firstcellShipX + 1;
       }
       if (orientation === 1) {
         firstcellShipY = firstcellShipY + 1;
-      }
-      shipCells.push([firstcellShipX, firstcellShipY]);
+      }  
     }
     this.arrShips.shift();
   }
 
   render() {
-    console.log(this.arrForChecking)
     if (document.querySelector(".container")) {
         document.querySelector(".container").remove();
     }
@@ -131,12 +130,23 @@ class Field {
             this.battleshipGrid[i][n].isHit = false;
             smallContainer.appendChild(this.battleshipGrid[i][n]);
             this.battleshipGrid[i][n].addEventListener("click", () => this.shoot(i, n))
-          } else {
+          }  else {
+            if (this.battleshipGrid[i][n].isKilled) {
+              this.battleshipGrid[i][n] = document.createElement("div");
+              this.battleshipGrid[i][n].className = "killed";
+              this.battleshipGrid[i][n].isShip = true;
+              this.battleshipGrid[i][n].isHit = true;
+              this.battleshipGrid[i][n].isKilled = true;
+              smallContainer.appendChild(this.battleshipGrid[i][n]);
+            }
+            else {
             this.battleshipGrid[i][n] = document.createElement("div");
             this.battleshipGrid[i][n].className = "hit";
             this.battleshipGrid[i][n].isShip = true;
             this.battleshipGrid[i][n].isHit = true;
-            smallContainer.appendChild(this.battleshipGrid[i][n]);
+            smallContainer.appendChild(this.battleshipGrid[i][n]);              
+            }
+
           }
         } else {
           if (this.battleshipGrid[i][n].isHit) {
@@ -160,27 +170,31 @@ class Field {
   }
 
 
-  shoot(i, n) {
-    this.battleshipGrid[i][n].isHit = true;
-    if (this.battleshipGrid[i][n].isShip) {
-      for (let b=0; b<this.arrForChecking.length; b++) {
-        for (let a=0; a<this.arrForChecking[b].length; a++) {
-          if (this.arrForChecking[b][a][0][0] === i && this.arrForChecking[b][a][0][1] === n) {
-            this.arrForChecking[b][a][1] = true;
-            if (this.arrForChecking[b][a][1]) {
-              for (let k=0; k<this.arrForChecking[b]; k++) {
-              if (!this.arrForChecking[b][k][1]) {
-                break;
-                }
-              }
-            }
-          }
-        }
-          
+  shoot(x, y) {
+    this.battleshipGrid[x][y].isHit = true;
+    let shipCells = this.getShipCells(x, y);
+    let calcShipCells = 0;
+    for (let shipCell of shipCells) {
+      if(!this.battleshipGrid[shipCell[0]][shipCell[1]].isHit) {
+        this.render();
+        return;
       }
-      
+    }
+    for (let shipCell of shipCells) {
+      this.battleshipGrid[shipCell[0]][shipCell[1]].isKilled = true;
     }
     this.render();
   }
+
+  getShipCells(x, y) {
+    for (let b=0; b<this.arrForChecking.length; b++) {
+        for (let a=0; a<this.arrForChecking[b].length; a++) {
+          if (this.arrForChecking[b][a][0] === x && this.arrForChecking[b][a][1] === y) {
+            console.log (this.arrForChecking[b])
+            return this.arrForChecking[b];
+            }
+        } 
+      }
+    }
 }
 new Field().init()
