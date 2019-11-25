@@ -5,6 +5,11 @@
 	align-items: center;
 }
 
+.small-container {
+	padding: 0;
+	margin: 0;
+}
+
 .sea {
 	display: inline-flex;
 	width: 50px;
@@ -21,19 +26,17 @@
 	border: 3px solid black;
 }
 
-.miss::after {
-	content: "x";
+.miss {
 	display: inline-flex;
 	width: 50px;
 	height: 50px;
-	background-color: #b0c4de;
+	background-color: white;
 	border: 3px solid black;
 	justify-content: center;
 	align-items: center;
 }
 
-.killed::after {
-	content: "x";
+.killed {
 	display: inline-flex;
 	width: 50px;
 	height: 50px;
@@ -43,7 +46,7 @@
 	align-items: center;
 }
 
-.injured {
+.hit {
 	display: inline-flex;
 	width: 50px;
 	height: 50px;
