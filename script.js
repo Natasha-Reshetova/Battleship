@@ -172,8 +172,11 @@ class Field {
 
   shoot(x, y) {
     this.battleshipGrid[x][y].isHit = true;
+    if (!this.battleshipGrid[x][y].isShip) {
+      this.render();
+      return;
+    }
     let shipCells = this.getShipCells(x, y);
-    let calcShipCells = 0;
     for (let shipCell of shipCells) {
       if(!this.battleshipGrid[shipCell[0]][shipCell[1]].isHit) {
         this.render();
@@ -182,6 +185,14 @@ class Field {
     }
     for (let shipCell of shipCells) {
       this.battleshipGrid[shipCell[0]][shipCell[1]].isKilled = true;
+      for (let a = shipCell[0] - 1; a < shipCell[0] + 2; a++) {
+        for (let b = shipCell[1] - 1; b < shipCell[1] + 2; b++) {
+          if (!this.battleshipGrid[a][b].isShip) {
+            this.battleshipGrid[a][b].isHit = true;
+            console.log(a, b)
+          }
+        }
+      }
     }
     this.render();
   }
@@ -190,7 +201,6 @@ class Field {
     for (let b=0; b<this.arrForChecking.length; b++) {
         for (let a=0; a<this.arrForChecking[b].length; a++) {
           if (this.arrForChecking[b][a][0] === x && this.arrForChecking[b][a][1] === y) {
-            console.log (this.arrForChecking[b])
             return this.arrForChecking[b];
             }
         } 
