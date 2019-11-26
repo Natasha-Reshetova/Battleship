@@ -1,5 +1,5 @@
-class Field {
-  constructor() {
+class Battleship {
+  init() {
     this.arrShips = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1];
     this.battleshipGrid = [];
     for (let i = 0; i < 12; i++) {
@@ -16,9 +16,6 @@ class Field {
     this.shipCells = [];
     this.successfulPoints = 0;
     this.allPoints = 0;
-  }
-
-  init() {
     while (this.arrShips.length > 0) {
       this.generateShip();
     }
@@ -161,52 +158,26 @@ class Field {
       smallContainer.className = "small-container";
       document.querySelector(".container").appendChild(smallContainer);
       for (let n = 1; n < 11; n++) {
-        if (this.battleshipGrid[i][n].isShip) {
-          if (!this.battleshipGrid[i][n].isHit) {
-            this.battleshipGrid[i][n] = document.createElement("div");
-            this.battleshipGrid[i][n].className = "ship";
-            this.battleshipGrid[i][n].isShip = true;
-            this.battleshipGrid[i][n].isHit = false;
-            smallContainer.appendChild(this.battleshipGrid[i][n]);
-            this.battleshipGrid[i][n].addEventListener("click", () => this.shoot(i, n))
-          }  else {
-            if (this.battleshipGrid[i][n].isKilled) {
-              this.battleshipGrid[i][n] = document.createElement("div");
-              this.battleshipGrid[i][n].className = "killed";
-              this.battleshipGrid[i][n].isShip = true;
-              this.battleshipGrid[i][n].isHit = true;
-              this.battleshipGrid[i][n].isKilled = true;
-              smallContainer.appendChild(this.battleshipGrid[i][n]);
-            }
-            else {
-            this.battleshipGrid[i][n] = document.createElement("div");
-            this.battleshipGrid[i][n].className = "hit";
-            this.battleshipGrid[i][n].isShip = true;
-            this.battleshipGrid[i][n].isHit = true;
-            smallContainer.appendChild(this.battleshipGrid[i][n]);              
-            }
+        let cell = document.createElement("div");
 
-          }
+        if (!this.battleshipGrid[i][n].isHit) {
+          cell.className = "sea";
         } else {
-          if (this.battleshipGrid[i][n].isHit) {
-            this.battleshipGrid[i][n] = document.createElement("div");
-            this.battleshipGrid[i][n].className = "miss";
-            this.battleshipGrid[i][n].isShip = false;
-            this.battleshipGrid[i][n].isHit = true;
-            smallContainer.appendChild(this.battleshipGrid[i][n]);
-          }
-          else {
-            this.battleshipGrid[i][n] = document.createElement("div");
-            this.battleshipGrid[i][n].className = "sea";
-            this.battleshipGrid[i][n].isShip = false;
-            this.battleshipGrid[i][n].isHit = false;
-            smallContainer.appendChild(this.battleshipGrid[i][n]);
-            this.battleshipGrid[i][n].addEventListener("click", () => this.shoot(i, n))
+          if (this.battleshipGrid[i][n].isKilled) {
+            cell.className = "killed";
+          } else if (this.battleshipGrid[i][n].isShip) {
+            cell.className = "hit";
+          } else {
+            cell.className = "miss";
           }
         }
-      }
+            if (!this.battleshipGrid[i][n].isHit) {
+              cell.addEventListener("click", () => this.shoot(i, n));
+          }
+          smallContainer.appendChild(cell);  
+          }          
+        }
     }
-  }
 
 
   shoot(x, y) {
@@ -253,7 +224,7 @@ class Field {
   startingNewGame() {
     document.querySelector(".block").remove();
     document.querySelector(".game-name").remove();
-    new Field().init()
+    this.init()
   }
 }
-new Field().init()
+new Battleship().init()

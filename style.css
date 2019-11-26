@@ -8,22 +8,6 @@
 	border: 2px solid black;
 }
 
-.sea {
-	display: inline-flex;
-	width: 50px;
-	height: 50px;
-	background-color: #b0c4de;
-	border: 1px solid black;
-}
-
-.ship {
-	display: inline-flex;
-	width: 50px;
-	height: 50px;
-	background-color: #b0c4de;
-	border: 1px solid black;
-}
-
 .game-over {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 22px;
@@ -67,6 +51,14 @@
 
 .new-game:hover {
 	background-color: #287233;
+}
+
+.sea {
+	display: inline-flex;
+	width: 50px;
+	height: 50px;
+	background-color: #b0c4de;
+	border: 1px solid black;
 }
 
 .miss {
