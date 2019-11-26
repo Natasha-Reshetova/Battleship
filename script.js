@@ -87,13 +87,7 @@ class Battleship {
 
     for (let k = 0; k < this.arrShips[0]; k++) {
       for (let i = 1; i < 12; i++) {
-        for (let n = 1; n < 12; n++) {
-          if (firstcellShipX === i) {
-            if (firstcellShipY === n) {
-              this.battleshipGrid[firstcellShipX][firstcellShipY].isShip = true;
-            }
-          }
-        }
+        this.battleshipGrid[firstcellShipX][firstcellShipY].isShip = true;
       }
       shipCells.push([firstcellShipX, firstcellShipY]);
       if (orientation === 0) {
@@ -161,14 +155,14 @@ class Battleship {
         let cell = document.createElement("div");
 
         if (!this.battleshipGrid[i][n].isHit) {
-          cell.className = "sea";
+          cell.className = "game-cell sea";
         } else {
           if (this.battleshipGrid[i][n].isKilled) {
-            cell.className = "killed";
+            cell.className = "game-cell killed";
           } else if (this.battleshipGrid[i][n].isShip) {
-            cell.className = "hit";
+            cell.className = "game-cell hit";
           } else {
-            cell.className = "miss";
+            cell.className = "game-cell miss";
           }
         }
             if (!this.battleshipGrid[i][n].isHit) {
